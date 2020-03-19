@@ -4,6 +4,8 @@
 import argparse
 from collections import OrderedDict
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 import warnings

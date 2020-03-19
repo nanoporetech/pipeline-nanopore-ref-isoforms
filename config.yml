@@ -4,7 +4,7 @@
 # Name of the pipeline:
 pipeline: "pipeline-nanopore-isoforms"
 # ABSOLUTE path to directory holding the working directory:
-workdir_top: "Workspaces"
+workdir_top: "evaluation"
 # Repository URL:
 repo: "https://github.com/nanoporetech/pipeline-nanopore-isoforms.git"
 

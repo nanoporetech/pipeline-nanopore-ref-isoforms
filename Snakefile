@@ -120,7 +120,6 @@ def gff_bundle_list(wildcards):
     bundle = glob_wildcards(os.path.join(checkpoint_output, '{bundle}.bam')).bundle
     bundle = sorted(bundle, key= lambda x: int(x.split("_")[0]))
     gffs = expand('gff_bundles/{bundle}.gff', bundle=bundle)
-    print(gffs)
     return gffs
 
 rule merge_gff_bundles:
