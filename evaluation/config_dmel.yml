@@ -2,7 +2,7 @@
 ## General pipeline parameters:
 
 # Name of the pipeline:
-pipeline: "pipeline-nanopore-isoforms"
+pipeline: "pipeline-evaluation-dmel"
 # ABSOLUTE path to directory holding the working directory:
 workdir_top: "evaluation"
 # Repository URL:
@@ -11,14 +11,14 @@ repo: "https://github.com/nanoporetech/pipeline-nanopore-ref-isoforms.git"
 ## Pipeline-specific parameters:
 
 # Input genome
-genome_fasta: "evaluation/data/SIRV_150601a.fasta"
+genome_fasta: "evaluation/pipeline-evalution-dmel/data/Drosophila_melanogaster.BDGP6.28.dna.toplevel.fa"
 
 existing_annotation: "evaluation/data/SIRV_isofroms.gtf"
 
 # cDNA or direct RNA reads in fastq format
-reads_fastq: "evaluation/data"
+reads_fastq: "evaluation/pipeline-evalution-dmel/data/ERR3588905_1.fastq"
 
-concatenate: true
+concatenate: false
 
 read_qc: false
 
