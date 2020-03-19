@@ -11,7 +11,7 @@ repo: "https://github.com/nanoporetech/pipeline-nanopore-ref-isoforms.git"
 ## Pipeline-specific parameters:
 
 # Input genome
-genome_fasta: "evaluation/pipeline-evalution-dmel/data/Drosophila_melanogaster.BDGP6.28.dna.toplevel.fa"
+genome_fasta: "evaluation/pipeline-evaluation-dmel/data/Drosophila_melanogaster.BDGP6.28.dna.toplevel.fa"
 
 existing_annotation: "evaluation/data/SIRV_isofroms.gtf"
 
