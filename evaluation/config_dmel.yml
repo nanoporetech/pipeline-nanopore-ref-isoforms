@@ -16,7 +16,7 @@ genome_fasta: "evaluation/pipeline-evaluation-dmel/data/Drosophila_melanogaster.
 existing_annotation: "evaluation/data/SIRV_isofroms.gtf"
 
 # cDNA or direct RNA reads in fastq format
-reads_fastq: "evaluation/pipeline-evalution-dmel/data/ERR3588905_1.fastq"
+reads_fastq: "evaluation/pipeline-evaluation-dmel/data/ERR3588905_1.fastq"
 
 concatenate: false
 

@@ -17,16 +17,16 @@ rm -fr $OUT_DIR/results
 mkdir -p $OUT_DIR/data
 
 if [ ! -f $REF ];
-then (cd $DATA_DIR; curl -L -C - -O $REF_URL; gzip -d ${REF}.gz)
+then (cd $DATA_DIR; curl -L -C - -O $REF_URL); gzip -d ${REF}.gz
 fi
 
 if [ ! -f $GFF ]
 then
-	(cd $DATA_DIR; curl -L -C - -O $GFF_URL; gzip -d ${GFF}.gz)
+	(cd $DATA_DIR; curl -L -C - -O $GFF_URL); gzip -d ${GFF}.gz
 fi
 
 if [ ! -f $FASTQ ];
-then (cd $DATA_DIR; curl -L -C - -O $FASTQ_URL; gzip -d ${FASTQ}.gz)
+then (cd $DATA_DIR; curl -L -C - -O $FASTQ_URL); gzip -d ${FASTQ}.gz
 fi
 
 snakemake -j $CORES all --configfile $CONF

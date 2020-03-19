@@ -47,7 +47,7 @@ rule preprocess_reads:
         if params.concat:
             shell("find %s  -regextype posix-extended -regex '.*\.(fastq|fq)$' -exec cat {{}} \\; > processed_reads/input_reads.fq" % str(input.fq))
         else:
-            "ln -s `realpath %s` processed_reads/input_reads.fq" % str(input.fq)
+            shell("ln -s `realpath %s` processed_reads/input_reads.fq" % str(input.fq))
         if params.pc:
            shell("cd processed_reads; cdna_classifier.py -t %d %s input_reads.fq full_length_reads.fq" % (threads, params.pc_opts))
         else:
