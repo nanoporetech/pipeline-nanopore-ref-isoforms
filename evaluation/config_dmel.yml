@@ -13,7 +13,7 @@ repo: "https://github.com/nanoporetech/pipeline-nanopore-ref-isoforms.git"
 # Input genome
 genome_fasta: "evaluation/pipeline-evaluation-dmel/data/Drosophila_melanogaster.BDGP6.28.dna.toplevel.fa"
 
-existing_annotation: "evaluation/data/SIRV_isofroms.gtf"
+existing_annotation: "Drosophila_melanogaster.BDGP6.28.99.chr.gff3"
 
 # cDNA or direct RNA reads in fastq format
 reads_fastq: "evaluation/pipeline-evaluation-dmel/data/ERR3588905_1.fastq"
@@ -39,7 +39,7 @@ minimum_mapping_quality: 10
 
 filter_internal_priming: false
 
-bundle_min_reads: 5000
+bundle_min_reads: 100000
 
 use_guide_annotation: true
 

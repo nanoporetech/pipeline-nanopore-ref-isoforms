@@ -121,9 +121,10 @@ rule run_stringtie:
         if params.guide and params.ann != "":
             print("Using guide annotation from: ", in_annotation)
             params.opts += " -G {} ".format(in_annotation)
+        trp = "STR.{}.".format(int(str(input.bundle).split("_")))
         shell("""
-            stringtie -L -v -p {} {} -o {} {}
-        """.format(threads, params.opts, output.gff, input.bundle))
+            stringtie -l {} -L -v -p {} {} -o {} {}
+        """.format(trp, threads, params.opts, output.gff, input.bundle))
 
 def gff_bundle_list(wildcards):
     checkpoint_output = checkpoint_output = checkpoints.split_bam.get(**wildcards).output[0]
