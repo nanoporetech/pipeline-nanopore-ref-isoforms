@@ -5,7 +5,7 @@ REF_URL="http://ftp.ensembl.org/pub/release-99/fasta/drosophila_melanogaster/dna
 CONF="evaluation/config_dmel.yml"
 CORES=30
 
-OUT_DIR="evaluation/pipeline-evaluation-dmel/results"
+OUT_DIR="evaluation/pipeline-evaluation-dmel"
 RES_DIR="$OUT_DIR/results"
 DATA_DIR="$OUT_DIR/data"
 FASTQ="$DATA_DIR/ERR3588905_1.fastq"
@@ -15,11 +15,11 @@ rm -fr $OUT_DIR/results
 mkdir -p $OUT_DIR/data
 
 if [ ! -f $REF ];
-then (cd $DATA_DIR; wget $REF_URL)
+then (cd $DATA_DIR; curl -L -C - -O $REF_URL)
 fi
 
 if [ ! -f $FASTQ ];
-then (cd $DATA_DIR; wget $FASTQ_URL; gzip -d ${FASTQ}.gz)
+then (cd $DATA_DIR; curl -L -C - -O $FASTQ_URL; gzip -d ${FASTQ}.gz)
 fi
 
 if [ ! -f $FASTQ_FL ];

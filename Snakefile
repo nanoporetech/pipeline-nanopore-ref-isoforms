@@ -83,6 +83,10 @@ rule map_reads:
     samtools index {output.bam}
     """
 
+skip_bundles = "NO"
+if config["bundle_min_reads"] is False:
+    skip_bundles = "YES"
+
 checkpoint split_bam:
     input:
         bam = rules.map_reads.output.bam,
@@ -93,7 +97,13 @@ checkpoint split_bam:
         min_reads = config["bundle_min_reads"]
     threads: config["threads"]
     shell:"""
-    seqkit bam -j {threads} -N {params.min_reads} {input.bam} -o {output}
+    if [ {skip_bundles} != "YES" ]
+    then
+        seqkit bam -j {threads} -N {params.min_reads} {input.bam} -o {output}
+    else
+        mkdir -p {output}
+        ln -s {input.bam} {output}/000000000_ALL:0:1_bundle.bam
+    fi
     """
 
 rule run_stringtie:

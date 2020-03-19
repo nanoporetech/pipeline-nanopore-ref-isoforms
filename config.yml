@@ -2,7 +2,7 @@
 ## General pipeline parameters:
 
 # Name of the pipeline:
-pipeline: "pipeline-nanopore-isoforms"
+pipeline: "pipeline-nanopore-ref-isoforms"
 # ABSOLUTE path to directory holding the working directory:
 workdir_top: "evaluation"
 # Repository URL:
@@ -39,7 +39,7 @@ minimum_mapping_quality: 10
 
 filter_internal_priming: false
 
-bundle_min_reads: 5000
+bundle_min_reads: false
 
 use_guide_annotation: true
 
