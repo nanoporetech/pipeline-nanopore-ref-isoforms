@@ -40,7 +40,7 @@ minimum_mapping_quality: 40
 
 filter_internal_priming: false
 
-bundle_min_reads: false
+bundle_min_reads: 50000
 
 use_guide_annotation: true
 
