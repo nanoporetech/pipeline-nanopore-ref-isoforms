@@ -123,7 +123,7 @@ rule run_stringtie:
             params.opts += " -G {} ".format(in_annotation)
         trp = "STR.{}.".format(int(str(wildcards.bundle).split("_")[0]))
         shell("""
-            stringtie -l {} -L -v -p {} {} -o {} {}
+            stringtie --rf -l {} -L -v -p {} {} -o {} {}
         """.format(trp, threads, params.opts, output.gff, input.bundle))
 
 def gff_bundle_list(wildcards):
