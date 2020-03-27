@@ -24,7 +24,8 @@ read_qc: false
 
 run_pychopper: true
 
-pychopper_opts: "-q 0.3 -B 5000"
+pychopper_opts: ""
+#pychopper_opts: "-q 0.3 -B 5000"
 
 # Extra option passed to minimap2 when generating index
 minimap_index_opts: "-k14"
