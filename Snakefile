@@ -115,7 +115,7 @@ rule run_stringtie:
         opts = config["stringtie_opts"],
         guide = config["use_guide_annotation"],
         ann = in_annotation
-    conda: "env.yml"
+    #conda: "env.yml"
     threads: config["threads"]
     run:
         if params.guide and params.ann != "":
