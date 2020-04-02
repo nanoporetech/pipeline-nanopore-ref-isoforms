@@ -29,4 +29,4 @@ if [ ! -f $FASTQ ];
 then (cd $DATA_DIR; curl -L -C - -O $FASTQ_URL); gzip -d ${FASTQ}.gz
 fi
 
-snakemake -j $CORES all --configfile $CONF
+snakemake --use-conda -j $CORES all --configfile $CONF
