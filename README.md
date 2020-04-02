@@ -4,6 +4,11 @@
 Pipeline for annotating genomes using long read transcriptomics data with stringtie and other tools
 ===================================================================================================
 
+This `snakemake` pipeline inferrs GFF annotation from Oxford Nanopore cDNA or direct RNA reads.
+The cDNA reads are optionally processed by [pychopper](https://github.com/nanoporetech/pychopper) for trimming and orientation. The prcoessed reads are mapped to the reference genome using [minimap2](https://github.com/lh3/minimap2), and then processed by [strintie](http://ccb.jhu.edu/software/stringtie) in long read mode (with or withouth using a guide annotation) to generate the GFF annotation.
+
+If an existing annotation is available, the inferred annotation is copared to it using [gffcompare](http://ccb.jhu.edu/software/stringtie/gffcompare.shtml) and a report is genereated.
+
 Getting Started
 ===============
 
@@ -13,10 +18,6 @@ Getting Started
 - The input genome must be in fasta format.
 
 ## Output
-
-The pipeline produces the following output:
-
-- TODO
 
 ## Depedencies
 
