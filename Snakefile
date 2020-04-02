@@ -66,6 +66,9 @@ rule build_minimap_index:
         minimap2 -t {threads} {params.opts} -I 1000G -d {output.index} {input.genome}
     """
 
+ContextFilter = """AlnContext: { Ref: "%s", LeftShift: -%d, RightShift: %d, RegexEnd: "[Aa]{%d,}", Stranded: True, Invert: True, Tsv: "alignments/internal_priming_fail.tsv"} """ % (in_genome,
+config["poly_context"], config["poly_context"], config["max_poly_run"])
+
 rule map_reads:
     input:
        index = rules.build_minimap_index.output.index,
@@ -75,11 +78,14 @@ rule map_reads:
     params:
         opts = config["minimap2_opts"],
         min_mq = config["minimum_mapping_quality"],
+        flt = lambda x : ContextFilter,
     conda: "env.yml"
     threads: config["threads"]
     shell:"""
     minimap2 -t {threads} -ax splice {params.opts} {input.index} {input.fastq}\
-    | samtools view -q {params.min_mq} -F 2304 -Sb | samtools sort -@ {threads} - -o {output.bam};
+    | samtools view -q {params.min_mq} -F 2304 -Sb\
+    | seqkit bam -j {threads} -T '{params.flt}' -\
+    | samtools sort -@ {threads} - -o {output.bam};
     samtools index {output.bam}
     """
 
@@ -114,17 +120,19 @@ rule run_stringtie:
     params:
         opts = config["stringtie_opts"],
         guide = config["use_guide_annotation"],
-        ann = in_annotation
-    #conda: "env.yml"
+        ann = in_annotation,
+        trp = lambda x: "STR.{}.".format(int(str(x.bundle).split("_")[0]))
+    conda: "env.yml"
     threads: config["threads"]
-    run:
-        if params.guide and params.ann != "":
-            print("Using guide annotation from: ", in_annotation)
-            params.opts += " -G {} ".format(in_annotation)
-        trp = "STR.{}.".format(int(str(wildcards.bundle).split("_")[0]))
-        shell("""
-            stringtie --rf -l {} -L -v -p {} {} -o {} {}
-        """.format(trp, threads, params.opts, output.gff, input.bundle))
+    shell:
+        """
+        G_FLAG=""
+        if [[ {params.guide} && -f {params.ann} ]];
+        then
+            G_FLAG="-G {params.ann}"
+        fi
+        stringtie --rf -l {params.trp} -L -v -p {threads} {params.opts} -o {output.gff} {input.bundle}
+        """
 
 def gff_bundle_list(wildcards):
     checkpoint_output = checkpoint_output = checkpoints.split_bam.get(**wildcards).output[0]
@@ -141,7 +149,7 @@ rule merge_gff_bundles:
     shell: """
     mkdir -p results/annotation
     echo '#gff-version 2' >> {output.merged}
-    echo '#pipeline-nanopore-isoforms: stringtie' >> {output.merged}
+    echo '#pipeline-nanopore-ref-isoforms: stringtie' >> {output.merged}
     for i in {input.gffs}
     do
         grep -v '#' $i >> {output.merged}
@@ -156,13 +164,20 @@ rule run_gffcompare:
     params:
         ann = in_annotation,
         opts = config["gffcompare_opts"],
-    run:
-        shell("mkdir -p {}".format(output.cmp_dir))
-        gp = os.path.basename(input.gff)
-        ing = os.path.abspath(input.gff)
-        if in_annotation != "":
-            shell("cd {}; ln -s {} {};gffcompare -o str_merged -r {} {} {}".format(output.cmp_dir, ing, gp, params.ann, params.opts, gp))
-            shell("cd {}; {} -r {} str_merged.stats".format(output.cmp_dir, os.path.join(SNAKEDIR,"scripts","plot_gffcmp_stats.py"), "str_gffcmp_report.pdf"))
+        gp = lambda x: os.path.basename(rules.merge_gff_bundles.output.merged),
+        ing = lambda x: os.path.abspath(rules.merge_gff_bundles.output.merged),
+    conda: "env.yml"
+    shell:
+        """
+        mkdir -p {output.cmp_dir};
+        cd {output.cmp_dir};
+        ln -s {params.ing} {params.gp};
+        if [[ -f {params.ann} ]];
+        then
+            gffcompare -o str_merged -r {params.ann} {params.opts} {params.gp}
+            {SNAKEDIR}/scripts/plot_gffcmp_stats.py -r str_gffcmp_report.pdf str_merged.stats;
+        fi
+        """
 
 rule run_gffread:
     input:
@@ -172,6 +187,7 @@ rule run_gffread:
     output:
         fas = "results/str_transcriptome.fas",
         merged_fas = "results/merged_transcriptome.fas",
+    conda: "env.yml"
     shell: """
         gffread -g {input.genome} -w {output.fas} {input.gff}
         if [ -f {input.gff_cmp}/str_merged.annotated.gtf ]

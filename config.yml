@@ -38,7 +38,8 @@ minimap2_opts: "-uf --splice-flank=no"
 # Minmum mapping quality
 minimum_mapping_quality: 40
 
-filter_internal_priming: false
+poly_context: 15
+max_poly_run: 6
 
 bundle_min_reads: 50000
 

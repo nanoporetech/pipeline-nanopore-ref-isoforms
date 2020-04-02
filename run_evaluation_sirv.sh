@@ -2,4 +2,4 @@
 
 CONF="config.yml"
 rm -fr evaluation/pipeline-nanopore-ref-isoforms
-snakemake -j 20 all --configfile  $CONF
+snakemake --use-conda -j 20 all --configfile  $CONF
