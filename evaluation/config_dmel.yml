@@ -1,6 +1,3 @@
----
-## General pipeline parameters:
-
 # Name of the pipeline:
 pipeline: "pipeline-evaluation-dmel"
 # ABSOLUTE path to directory holding the working directory:
@@ -13,11 +10,10 @@ repo: "https://github.com/nanoporetech/pipeline-nanopore-ref-isoforms.git"
 # Input genome
 genome_fasta: "evaluation/pipeline-evaluation-dmel/data/Drosophila_melanogaster.BDGP6.28.dna.toplevel.fa"
 
-existing_annotation: "evaluation/pipeline-evaluation-dmel/data/Drosophila_melanogaster.BDGP6.28.99.chr.gff3"
+existing_annotation: "evaluation/pipeline-evaluation-dmel/data/Drosophila_melanogaster.BDGP6.28.99.gff3"
 
 # cDNA or direct RNA reads in fastq format
 reads_fastq: "evaluation/pipeline-evaluation-dmel/data/ERR3588905_1.fastq"
-
 concatenate: false
 
 read_qc: false
@@ -30,22 +26,24 @@ pychopper_opts: "-q 0.3 -B 5000"
 minimap_index_opts: "-k14"
 
 # Extra options passed to minimap2
-minimap2_opts: "-u f "
+minimap2_opts: "-uf --splice-flank=no"
 # Add this for SIRV data:
 # "--splice-flank=no"
 
 # Minmum mapping quality
 minimum_mapping_quality: 40
 
-filter_internal_priming: false
+poly_context: 15
 
-bundle_min_reads: 100000
+max_poly_run: 12
+
+bundle_min_reads: 50000
 
 use_guide_annotation: true
 
 stringtie_opts: ""
 
-gffcompare_opts: " -R "
+gffcompare_opts: ""
 
 # Threads
 threads: 50
