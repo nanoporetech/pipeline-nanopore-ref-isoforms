@@ -24,10 +24,6 @@ The pipeline produces the following output:
 - [snakemake](http://snakemake.readthedocs.io/en/latest/) - easily installed via conda
 - The rest of the dependencies are installed via conda.
 
-## Layout
-
-
-
 ## Installation
 
 Clone the pipeline and the pinfish toolset by issuing:
@@ -47,9 +43,7 @@ snakemake --use-conda -j <num_cores> all
 Results
 =======
 
-## Performance on SIRV E0 mix spike-in data
-
-## Performance on real data
+## Performance on D. melanogaster PCS109 data
 
 Help
 =====
