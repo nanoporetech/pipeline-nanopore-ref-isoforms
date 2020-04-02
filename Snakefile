@@ -112,6 +112,10 @@ checkpoint split_bam:
     fi
     """
 
+use_guide = "NO"
+if config["use_guide_annotation"] is True:
+    use_guide = "YES"
+
 rule run_stringtie:
     input:
         bundle = "bam_bundles/{bundle}.bam"
@@ -119,7 +123,7 @@ rule run_stringtie:
         gff = "gff_bundles/{bundle}.gff",
     params:
         opts = config["stringtie_opts"],
-        guide = config["use_guide_annotation"],
+        guide = use_guide,
         ann = in_annotation,
         trp = lambda x: "STR.{}.".format(int(str(x.bundle).split("_")[0]))
     conda: "env.yml"
@@ -127,7 +131,7 @@ rule run_stringtie:
     shell:
         """
         G_FLAG=""
-        if [[ {params.guide} && -f {params.ann} ]];
+        if [[ {params.guide} == "YES" ]];
         then
             G_FLAG="-G {params.ann}"
         fi

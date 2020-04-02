@@ -26,7 +26,7 @@ pychopper_opts: "-q 0.3 -B 5000"
 minimap_index_opts: "-k14"
 
 # Extra options passed to minimap2
-minimap2_opts: "-uf --splice-flank=no"
+minimap2_opts: "-uf "
 # Add this for SIRV data:
 # "--splice-flank=no"
 
@@ -47,5 +47,4 @@ gffcompare_opts: ""
 
 # Threads
 threads: 50
-
 
