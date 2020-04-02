@@ -135,7 +135,7 @@ rule run_stringtie:
         then
             G_FLAG="-G {params.ann}"
         fi
-        stringtie --rf -l {params.trp} -L -v -p {threads} {params.opts} -o {output.gff} {input.bundle}
+        stringtie --rf $G_FLAG -l {params.trp} -L -v -p {threads} {params.opts} -o {output.gff} {input.bundle}
         """
 
 def gff_bundle_list(wildcards):
