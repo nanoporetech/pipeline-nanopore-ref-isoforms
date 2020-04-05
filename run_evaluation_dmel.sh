@@ -4,7 +4,7 @@ FASTQ_URL="http://ftp.sra.ebi.ac.uk/vol1/fastq/ERR358/005/ERR3588905/ERR3588905_
 REF_URL="http://ftp.ensembl.org/pub/release-99/fasta/drosophila_melanogaster/dna/Drosophila_melanogaster.BDGP6.28.dna.toplevel.fa.gz"
 GFF_URL="http://ftp.ensembl.org/pub/release-99/gff3/drosophila_melanogaster/Drosophila_melanogaster.BDGP6.28.99.gff3.gz"
 CONF="evaluation/config_dmel.yml"
-CORES=30
+CORES=50
 
 OUT_DIR="evaluation/pipeline-evaluation-dmel"
 RES_DIR="$OUT_DIR/results"

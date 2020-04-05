@@ -18,37 +18,46 @@ existing_annotation: "evaluation/data/SIRV_isofroms.gtf"
 # cDNA or direct RNA reads in fastq format
 reads_fastq: "evaluation/data"
 
+# The path above is a directory, find and concatenate fastq files:
 concatenate: true
 
+# Not used in this release:
 read_qc: false
 
+# Process cDNA reads using pychopper, turn off for direct RNA:
 run_pychopper: true
 
+# Options passed to pychopper:
 pychopper_opts: ""
-#pychopper_opts: "-q 0.3 -B 5000"
 
 # Extra option passed to minimap2 when generating index
 minimap_index_opts: "-k14"
 
 # Extra options passed to minimap2
-minimap2_opts: "-uf --splice-flank=no"
+minimap2_opts: "-uf "
 # Add this for SIRV data:
 # "--splice-flank=no"
 
 # Minmum mapping quality
 minimum_mapping_quality: 40
 
+# Internal priming filter context size:
 poly_context: 15
 
+# Maximum allowed poly(A) length in the genome near the 3' end of mapping: 
 max_poly_run: 12
 
+# Minimium number of reads in BAM bundles:
 bundle_min_reads: 50000
 
+# Use exiting annotation as guide for stringtie:
 use_guide_annotation: true
 
+# Options passed to stringtie:
 stringtie_opts: ""
 
-gffcompare_opts: ""
+# Options passed to gffcompare:
+gffcompare_opts: " -R "
 
 # Threads
 threads: 50

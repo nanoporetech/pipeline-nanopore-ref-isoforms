@@ -46,6 +46,14 @@ Results
 
 ## Performance on D. melanogaster PCS109 data
 
+Run `./run_evaluation_dmel.sh` to reproduce these results.
+
+### Performance with guide annotation
+
+See this folder for raw gffcompare output.
+
+### Performance without guide annotation
+
 Help
 =====
 

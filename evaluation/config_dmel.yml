@@ -14,13 +14,16 @@ existing_annotation: "evaluation/pipeline-evaluation-dmel/data/Drosophila_melano
 
 # cDNA or direct RNA reads in fastq format
 reads_fastq: "evaluation/pipeline-evaluation-dmel/data/ERR3588905_1.fastq"
+
+# The path above is a directory, find and concatenate fastq files:
 concatenate: false
 
+# Not used at the moment:
 read_qc: false
 
 run_pychopper: true
 
-pychopper_opts: "-q 0.3 -B 5000"
+pychopper_opts: ""
 
 # Extra option passed to minimap2 when generating index
 minimap_index_opts: "-k14"
@@ -33,9 +36,9 @@ minimap2_opts: "-uf "
 # Minmum mapping quality
 minimum_mapping_quality: 40
 
-poly_context: 15
+poly_context: 20
 
-max_poly_run: 12
+max_poly_run: 10
 
 bundle_min_reads: 50000
 
@@ -43,7 +46,7 @@ use_guide_annotation: true
 
 stringtie_opts: ""
 
-gffcompare_opts: ""
+gffcompare_opts: " -R "
 
 # Threads
 threads: 50

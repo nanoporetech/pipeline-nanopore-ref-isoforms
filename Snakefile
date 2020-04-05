@@ -116,6 +116,10 @@ use_guide = "NO"
 if config["use_guide_annotation"] is True:
     use_guide = "YES"
 
+str_threads = 10
+if config["threads"] < str_threads:
+    str_threads = config["threads"]
+
 rule run_stringtie:
     input:
         bundle = "bam_bundles/{bundle}.bam"
@@ -127,7 +131,7 @@ rule run_stringtie:
         ann = in_annotation,
         trp = lambda x: "STR.{}.".format(int(str(x.bundle).split("_")[0]))
     conda: "env.yml"
-    threads: config["threads"]
+    threads: str_threads
     shell:
         """
         G_FLAG=""
