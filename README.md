@@ -4,10 +4,10 @@
 Pipeline for annotating genomes using long read transcriptomics data with stringtie and other tools
 ===================================================================================================
 
-This `snakemake` pipeline inferrs GFF annotation from Oxford Nanopore cDNA or direct RNA reads.
+This `snakemake` pipeline creates GFF annotation from Oxford Nanopore cDNA or direct RNA reads.
 The cDNA reads are optionally processed by [pychopper](https://github.com/nanoporetech/pychopper) for trimming and orientation. The prcoessed reads are mapped to the reference genome using [minimap2](https://github.com/lh3/minimap2), and then processed by [strintie](http://ccb.jhu.edu/software/stringtie) in long read mode (with or withouth using a guide annotation) to generate the GFF annotation.
 
-If an existing annotation is available, the inferred annotation is copared to it using [gffcompare](http://ccb.jhu.edu/software/stringtie/gffcompare.shtml) and a report is genereated.
+If an existing annotation is available, the inferred annotation is compared to it using [gffcompare](http://ccb.jhu.edu/software/stringtie/gffcompare.shtml) and a report is genereated.
 
 Getting Started
 ===============
@@ -18,6 +18,7 @@ Getting Started
 - The input genome must be in fasta format.
 
 ## Output
+- The output is of a GFF ('query') file format - this is the annotated genome prodcuced by the pipeline.
 
 ## Depedencies
 
@@ -72,3 +73,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ## References and Supporting Information
 
 See the post announcing the tool at the Oxford Nanopore Technologies community [here](https://community.nanoporetech.com/posts/new-transcriptomics-analys).
+
+### Research Release
+
+Research releases are provided as technology demonstrators to provide early access to features or stimulate Community development of tools. Support for this software will be minimal and is only provided directly by the developers. Feature requests, improvements, and discussions are welcome and can be implemented by forking and pull requests. However much as we would like to rectify every issue and piece of feedback users may have, the developers may have limited resource for support of this software. Research releases may be unstable and subject to rapid iteration by Oxford Nanopore Technologies.
