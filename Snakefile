@@ -259,7 +259,7 @@ rule run_gffcompare:
         if [[ -f {params.ann} ]];
         then
             gffcompare -o str_merged -r {params.ann} {params.opts} {params.gp}
-            {SNAKEDIR}/scripts/plot_gffcmp_stats.py -r str_gffcmp_report.pdf -t str_merged.tracking str_merged.stats;
+            # {SNAKEDIR}/scripts/plot_gffcmp_stats.py -r str_gffcmp_report.pdf -t str_merged.tracking str_merged.stats;
         fi
         """
 
