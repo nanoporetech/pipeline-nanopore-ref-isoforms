@@ -143,7 +143,7 @@ rule map_reads:
         if [[ -s $fas ]];
         then
             NAME="${{fas%.*}}"
-            spoa -r 1 -l 1 $fas | sed '1d' | awk '{{print ">" NR "\\n" $1}}' > ${{fas}}_aln
+            spoa -r 1 -l 1 $fas | awk '{{if(NR % 2 == 0){{print ">" NR "\\n" $1}}}}' > ${{fas}}_aln
             hmmbuild -n $NAME --dna ${{NAME}}.hmm ${{fas}}_aln > /dev/null
             hmmlogo ${{NAME}}.hmm > ${{NAME}}.logo
             {SNAKEDIR}/scripts/skylign.py -r ${{NAME}}.png `realpath ${{NAME}}.hmm`
