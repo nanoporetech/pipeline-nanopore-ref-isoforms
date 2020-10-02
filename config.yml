@@ -59,6 +59,9 @@ stringtie_opts: " --conservative "
 # Options passed to gffcompare:
 gffcompare_opts: " -R "
 
+# Plot gffcompare results:
+plot_gffcmp_stats: False
+
 # Threads:
 threads: 50
 
