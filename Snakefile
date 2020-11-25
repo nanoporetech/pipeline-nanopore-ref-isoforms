@@ -12,10 +12,12 @@ include: "snakelib/utils.snake"
 in_fastq = config["reads_fastq"]
 if not path.isabs(in_fastq):
     in_fastq = path.join(SNAKEDIR, in_fastq)
+    assert os.path.exists(in_fastq)
 
 in_genome = config["genome_fasta"]
 if not path.isabs(in_genome):
     in_genome = path.join(SNAKEDIR, in_genome)
+    assert os.path.exists(in_genome)
 
 in_annotation = config["existing_annotation"]
 if not path.isabs(in_annotation) and in_annotation != "":
@@ -55,10 +57,24 @@ rule preprocess_reads:
         if [[ {params.pc} == "True" ]];
         then
             cd processed_reads; cdna_classifier.py -t {threads} {params.pc_opts} input_reads.fq full_length_reads.fq
+            {SNAKEDIR}/scripts/generate_pychopper_stats.py --data cdna_classifier_report.tsv --output .
         else
             ln -s `realpath processed_reads/input_reads.fq` processed_reads/full_length_reads.fq
         fi
         """
+
+rule generate_fq_stats:
+    input:
+        fastq = rules.preprocess_reads.output.flq
+    output:
+        lengths = "processed_reads/lengths.txt",
+        base_qual = "processed_reads/base_qual.txt",
+        read_qual = "processed_reads/read_qual.txt"
+    conda: "env.yml"
+    shell:"""
+        {SNAKEDIR}/scripts/run_fastq_qc.py --fastq {input.fastq} --output "processed_reads`
+        
+    """
 
 rule build_minimap_index:
     input:
@@ -90,7 +106,7 @@ rule map_reads:
         min_mq = config["minimum_mapping_quality"],
         flt = lambda x : ContextFilter,
         dump = lambda x : ContextDumper,
-        context_plt = config["context_plt_alns"]
+        context_plt = int(config["context_plt_alns"])
     conda: "env.yml"
     threads: config["threads"]
     shell:"""
@@ -136,20 +152,20 @@ rule map_reads:
         (seqkit sana -i fasta alignments/context_shuff_minus_end.fasta.tmp 2>/dev/null) > alignments/context_shuff_minus_end.fasta || true
         rm alignments/context*.tsv
         rm alignments/*.tmp
+        
+        for fas in alignments/context*.fasta;
+        do
+            if [[ -s $fas ]];
+            then
+                NAME="${{fas%.*}}"
+                spoa -r 1 -l 1 $fas | sed '1d' | awk '{{print ">" NR "\\n" $1}}' > ${{fas}}_aln
+                hmmbuild -n $NAME --dna ${{NAME}}.hmm ${{fas}}_aln > /dev/null
+                hmmlogo ${{NAME}}.hmm > ${{NAME}}.logo
+                {SNAKEDIR}/scripts/skylign.py -r ${{NAME}}.png `realpath ${{NAME}}.hmm`
+            fi
+        done
+        rm alignments/context*fasta*
     fi
-
-    for fas in alignments/context*.fasta;
-    do
-        if [[ -s $fas ]];
-        then
-            NAME="${{fas%.*}}"
-            spoa -r 1 -l 1 $fas | awk '{{if(NR % 2 == 0){{print ">" NR "\\n" $1}}}}' > ${{fas}}_aln
-            hmmbuild -n $NAME --dna ${{NAME}}.hmm ${{fas}}_aln > /dev/null
-            hmmlogo ${{NAME}}.hmm > ${{NAME}}.logo
-            {SNAKEDIR}/scripts/skylign.py -r ${{NAME}}.png `realpath ${{NAME}}.hmm`
-        fi
-    done
-    rm alignments/context*fasta*
     """
 
 
@@ -246,6 +262,7 @@ rule run_gffcompare:
     output:
         cmp_dir = directory("results/gffcompare")
     params:
+        plot_gffcmp_stats = True if config["plot_gffcmp_stats"] == "True" else False,
         ann = in_annotation,
         opts = config["gffcompare_opts"],
         gp = lambda x: os.path.basename(rules.merge_gff_bundles.output.merged),
@@ -259,7 +276,11 @@ rule run_gffcompare:
         if [[ -f {params.ann} ]];
         then
             gffcompare -o str_merged -r {params.ann} {params.opts} {params.gp}
-            {SNAKEDIR}/scripts/plot_gffcmp_stats.py -r str_gffcmp_report.pdf -t str_merged.tracking str_merged.stats;
+            {SNAKEDIR}/scripts/generate_tracking_summary.py --tracking str_merged.tracking --output_dir . --annotation {params.ann}
+            if [[ {params.plot_gffcmp_stats} == "True" ]];
+            then
+                {SNAKEDIR}/scripts/plot_gffcmp_stats.py -r str_gffcmp_report.pdf -t str_merged.tracking str_merged.stats;
+            fi
         fi
         """
 
@@ -281,6 +302,19 @@ rule run_gffread:
             touch {output.merged_fas}
         fi
     """
+
+
+rule some:
+    input:
+        ver = rules.dump_versions.output.ver,
+        index = rules.build_minimap_index.output.index,
+        processed = rules.preprocess_reads.output.flq,
+        fq_stats = rules.generate_fq_stats.output.read_qual,
+        aligned_reads = rules.map_reads.output.bam,
+        str_gff = rules.merge_gff_bundles.output,
+        cmp_dir = rules.run_gffcompare.output.cmp_dir,
+        # trs = rules.run_gffcompare.output.fas
+
 
 
 rule all: ## run the whole pipeline
