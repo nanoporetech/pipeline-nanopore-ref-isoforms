@@ -41,9 +41,6 @@ minimum_mapping_quality: 40
 # Internal priming filter context size:
 poly_context: 24
 
-# Number of alignments to sample for context plots:
-context_plt_alns: 5000
-
 # Maximum allowed poly(A) length in the genome near the 3' end of mapping: 
 max_poly_run: 8
 

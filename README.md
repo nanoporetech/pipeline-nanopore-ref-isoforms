@@ -69,19 +69,6 @@ See [this folder](https://github.com/nanoporetech/pipeline-nanopore-ref-isoforms
 
 See [this folder](https://github.com/nanoporetech/pipeline-nanopore-ref-isoforms/tree/master/evaluation/results/dmel/no_guide) for raw gffcompare output and the full PDF report.
 
-### HMM logos of alignment contexts
-
-HMM logos are generated from the context of the start and end positions of the read alignments and saved under `alignments/context*.png`. Some examples are shown below.
-
-![dmel_plus_start](https://github.com/nanoporetech/pipeline-nanopore-ref-isoforms/raw/master/evaluation/results/dmel/context_shuff_plus_start.png)
-
-The logo of the context of aligment start positions of a random sample of reads. Note the pattern reminescent of a [TATA-box](https://en.wikipedia.org/wiki/TATA_box) at the beggining.
-
-![dmel_plus_end](https://github.com/nanoporetech/pipeline-nanopore-ref-isoforms/raw/master/evaluation/results/dmel/context_shuff_plus_end.png)
-
-The logo of the context of aligment end positions of a random sample of reads. Note that the region is AT rich, which is a characteristic of [polyadenylation signals](https://en.wikipedia.org/wiki/Polyadenylation).
-
-
 ## Licence and Copyright
 
 (c) 2020 Oxford Nanopore Technologies Ltd.

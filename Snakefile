@@ -106,7 +106,6 @@ rule map_reads:
         min_mq = config["minimum_mapping_quality"],
         flt = lambda x : ContextFilter,
         dump = lambda x : ContextDumper,
-        context_plt = int(config["context_plt_alns"])
     conda: "env.yml"
     threads: config["threads"]
     shell:"""
@@ -122,49 +121,6 @@ rule map_reads:
     then
         tail -n +2 alignments/internal_priming_fail.tsv | awk '{{print ">" $1 "\\n" $4 }}' - > alignments/context_internal_priming_fail_start.fasta
         tail -n +2 alignments/internal_priming_fail.tsv | awk '{{print ">" $1 "\\n" $6 }}' - > alignments/context_internal_priming_fail_end.fasta
-    fi
-
-    if [[ {params.context_plt} -gt 0 ]];
-    then
-        (seqkit bam -j {threads} -T '{params.dump}' {output.bam} >/dev/null) || true
-        tail -n +2 alignments/context.tsv | shuf - > alignments/context_shuff.tsv
-        csvtk -t -H filter2 -f '$3 == 1' alignments/context_shuff.tsv > alignments/context_shuff_plus.tsv
-        LINES_PLUS={params.context_plt}
-        TOTAL_PLUS=`wc -l alignments/context_shuff_plus.tsv | cut -d$' ' -f 1`
-        if [[ $LINES_PLUS -gt $TOTAL_PLUS ]];
-        then
-            LINES_PLUS=$TOTAL_PLUS
-        fi
-        head -n $LINES_PLUS alignments/context_shuff_plus.tsv | awk '{{print ">" $1 "\\n" $4 }}' - > alignments/context_shuff_plus_start.fasta
-        (seqkit sana -i fasta alignments/context_shuff_plus_start.fasta.tmp 2>/dev/null) > alignments/context_shuff_plus_start.fasta || true
-        head -n $LINES_PLUS alignments/context_shuff_plus.tsv | awk '{{print ">" $1 "\\n" $6 }}' - > alignments/context_shuff_plus_end.fasta.tmp
-        (seqkit sana -i fasta alignments/context_shuff_plus_end.fasta.tmp 2>/dev/null) > alignments/context_shuff_plus_end.fasta || true
-        csvtk -t -H filter2 -f '$3 == "-1"' alignments/context_shuff.tsv > alignments/context_shuff_minus.tsv
-        LINES_MINUS={params.context_plt}
-        TOTAL_MINUS=`wc -l alignments/context_shuff_minus.tsv| cut -d$' ' -f 1`
-        if [[ $LINES_MINUS -gt $TOTAL_MINUS ]];
-        then
-            LINES_MINUS=$TOTAL_MINUS
-        fi
-        head -n $LINES_MINUS alignments/context_shuff_minus.tsv | awk '{{print ">" $1 "\\n" $4 }}' - > alignments/context_shuff_minus_start.fasta.tmp
-        (seqkit sana -i fasta alignments/context_shuff_minus_start.fasta.tmp 2>/dev/null) > alignments/context_shuff_minus_start.fasta || true
-        head -n $LINES_MINUS alignments/context_shuff_minus.tsv | awk '{{print ">" $1 "\\n" $6 }}' - > alignments/context_shuff_minus_end.fasta.tmp
-        (seqkit sana -i fasta alignments/context_shuff_minus_end.fasta.tmp 2>/dev/null) > alignments/context_shuff_minus_end.fasta || true
-        rm alignments/context*.tsv
-        rm alignments/*.tmp
-        
-        for fas in alignments/context*.fasta;
-        do
-            if [[ -s $fas ]];
-            then
-                NAME="${{fas%.*}}"
-                spoa -r 1 -l 1 $fas | sed '1d' | awk '{{print ">" NR "\\n" $1}}' > ${{fas}}_aln
-                hmmbuild -n $NAME --dna ${{NAME}}.hmm ${{fas}}_aln > /dev/null
-                hmmlogo ${{NAME}}.hmm > ${{NAME}}.logo
-                {SNAKEDIR}/scripts/skylign.py -r ${{NAME}}.png `realpath ${{NAME}}.hmm`
-            fi
-        done
-        rm alignments/context*fasta*
     fi
     """
 
