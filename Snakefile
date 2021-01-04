@@ -72,8 +72,7 @@ rule generate_fq_stats:
         read_qual = "processed_reads/read_qual.txt"
     conda: "env.yml"
     shell:"""
-        {SNAKEDIR}/scripts/run_fastq_qc.py --fastq {input.fastq} --output "processed_reads`
-        
+        {SNAKEDIR}/scripts/run_fastq_qc.py --fastq {input.fastq} --output "processed_reads"
     """
 
 rule build_minimap_index:
